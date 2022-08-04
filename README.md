@@ -19,6 +19,7 @@ import (
 
 func main() {
     zerolog.TimeFieldFormat = zerolog.TimeFormatUnixMs
+    zerologr.Verbosity = 2
     zerologr.NameFieldName = "logger"
     zerologr.NameSeparator = "/"
 
@@ -32,10 +33,14 @@ func main() {
 
 ## Implementation Details
 
-For the most part, concepts in Zerolog correspond directly with those in logr.
+~~For the most part, concepts in Zerolog correspond directly with those in logr.~~
 
-Levels in logr correspond to custom debug levels in Zerolog. Any given level
-in logr is represents by `zerologLevel = 1 - logrLevel`.
+~~Levels in logr correspond to custom debug levels in Zerolog. Any given level
+in logr is represents by `zerologLevel = 1 - logrLevel`.~~
 
-For example `V(2)` is equivalent to Zerolog's `TraceLevel`, while `V(1)` is
-equivalent to Zerolog's `DebugLevel`.
+~~For example `V(2)` is equivalent to Zerolog's `TraceLevel`, while `V(1)` is
+equivalent to Zerolog's `DebugLevel`.~~
+
+Only `info` and `error` levels are supported. You should control the verbosity of info through V-levels.
+
+For example `V(2)` will output `{"level": "info", "v": 2}`.

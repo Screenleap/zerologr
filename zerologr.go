@@ -32,6 +32,8 @@ var (
 	NameFieldName = "logger"
 	// NameSeparator separates names for logr.WithName.
 	NameSeparator = "/"
+	// Verbosity is the V logging level
+	Verbosity uint = 0
 	// VerbosityFieldName is the field key for logr.Info verbosity. If set to "",
 	// its value is not emitted.
 	VerbosityFieldName = "v"
@@ -84,14 +86,12 @@ func (ls *LogSink) Init(ri logr.RuntimeInfo) {
 
 // Enabled tests whether this LogSink is enabled at the specified V-level.
 func (ls *LogSink) Enabled(level int) bool {
-	// Optimization: Info() will check level internally.
-	const traceLevel = 1 - int(zerolog.TraceLevel)
-	return level <= traceLevel
+	return Verbosity >= uint(level)
 }
 
 // Info logs a non-error message at specified V-level with the given key/value pairs as context.
 func (ls *LogSink) Info(level int, msg string, keysAndValues ...interface{}) {
-	e := ls.l.WithLevel(zerolog.Level(1 - level))
+	e := ls.l.Info()
 	if VerbosityFieldName != "" {
 		e.Int(VerbosityFieldName, level)
 	}
