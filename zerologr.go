@@ -27,6 +27,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
+const (
+	defaultLevelDelta zerolog.Level = 1
+)
+
 var (
 	// NameFieldName is the field key for logr.WithName.
 	NameFieldName = "logger"
@@ -84,14 +88,13 @@ func (ls *LogSink) Init(ri logr.RuntimeInfo) {
 
 // Enabled tests whether this LogSink is enabled at the specified V-level.
 func (ls *LogSink) Enabled(level int) bool {
-	// Optimization: Info() will check level internally.
-	const traceLevel = 1 - int(zerolog.TraceLevel)
-	return level <= traceLevel
+	return ls.l.GetLevel() <= zerologLevel(level)
 }
 
 // Info logs a non-error message at specified V-level with the given key/value pairs as context.
 func (ls *LogSink) Info(level int, msg string, keysAndValues ...interface{}) {
-	e := ls.l.WithLevel(zerolog.Level(1 - level))
+	e := ls.l.WithLevel(zerologLevel(level))
+
 	if VerbosityFieldName != "" {
 		e.Int(VerbosityFieldName, level)
 	}
@@ -163,4 +166,8 @@ func DefaultRender(keysAndValues []interface{}) []interface{} {
 		}
 	}
 	return keysAndValues
+}
+
+func zerologLevel(level int) zerolog.Level {
+	return defaultLevelDelta - zerolog.Level(level)
 }
