@@ -196,32 +196,6 @@ func TestLogging(t *testing.T) {
 				"-animal": "walrus",
 			},
 		},
-		//{
-		//	description: "complex data types are converted",
-		//	logFunc: func(log logr.Logger) {
-		//		log.Info("hello, world", "animal", []byte("walrus"), "list", []int{1, 2, 3})
-		//	},
-		//	assertions: map[string]string{
-		//		"level":   "info",
-		//		"message": "hello, world",
-		//		"animal":  "walrus",
-		//		"list":    "[1,2,3]",
-		//	},
-		//},
-		//{
-		//	description: "custom formatter is used",
-		//	logFunc: func(log logr.Logger) {
-		//		log.Info("hello, world", "list", []int{1, 2, 3})
-		//	},
-		//	formatter: func(val interface{}) interface{} {
-		//		return fmt.Sprintf("%v", val)
-		//	},
-		//	assertions: map[string]string{
-		//		"level":   "info",
-		//		"message": "hello, world",
-		//		"list":    "[1 2 3]",
-		//	},
-		//},
 		{
 			description: "with default name",
 			logFunc: func(log logr.Logger) {
@@ -306,8 +280,8 @@ func TestLogging(t *testing.T) {
 			tt.logFunc(logger)
 
 			var loggedLine map[string]string
-			bytes := logWriter.Bytes()
-			err := json.Unmarshal(bytes, &loggedLine)
+			b := logWriter.Bytes()
+			err := json.Unmarshal(b, &loggedLine)
 
 			require.NoError(t, err)
 
